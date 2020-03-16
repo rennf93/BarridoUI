@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Estrategias{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Bancos</li>
+{% endblock %}
+
+{% block pagetitle %}Bancos{% endblock %}
+
+{% block content %}
+    {% include "components/companies_table.html" with companies=companies actions=actions %}
+{% endblock %}

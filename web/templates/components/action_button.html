@@ -1,0 +1,15 @@
+<div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+    {% if action.param|length < 0 %}
+        <a href="{% url action.method action.param %}" class="btn btn-success pull-right waves-effect waves-light">
+            <span class="fa {{ action.icon }}"></span> {{ action.title }}
+        </a>
+    {% elif element_id %}
+        <a href="{% url action.method element_id %}" class="btn btn-success pull-right waves-effect waves-light">
+            <span class="fa {{ action.icon }}"></span> {{ action.title }}
+        </a>
+    {% else %}
+        <a href="{% url action.method %}" class="btn btn-success pull-right waves-effect waves-light">
+            <span class="fa {{ action.icon }}"></span> {{ action.title }}
+        </a>
+    {% endif %}
+</div>

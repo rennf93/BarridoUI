@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Informe de Cash Outs{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Informe de Cash Outs</li>
+{% endblock %}
+
+{% block pagetitle %}Procesos Cash Out{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            </div>
+            <h3 class="box-title">Informe de Cash Outs
+              <a href="{% url "cash_out_summaries" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>
+              </a>
+              <p class="text-muted">Lista de procesados por día</p>
+            </h3>
+            <div class="table-responsive overflow-visible">
+                <table class="table table-striped" id="cashout-table">
+                    <thead>
+                        <tr>
+                            <th>Companía</th>
+                            <th>Banco</th>
+                            <th>Fecha de Envío</th>
+                            <th>Monto enviado</th>
+                            <th>Monto máximo por día</th>
+                            <th>Tipo</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cash_out_summary in cash_out_summaries.content %}
+                        <tr>
+                            <td>{{ cash_out_summary.companyCode }}</td>
+                            <td>{{ cash_out_summary.bankName }}</td>
+                            <td>{{ cash_out_summary.sendingDate }}</td>
+                            <td>{{ cash_out_summary.totalSentAmount }}</td>
+                            <td>{{ cash_out_summary.cashoutMaxAmountPerDay }}</td>
+                            <td>{{ cash_out_summary.type }}</td>
+                            <td>
+                              {% with table_actions.0 as action %}
+                                <a href="{% url 'cash_outs' %}?companyId={{ cash_out_summary.companyId }}&bankId={{ cash_out_summary.bankId}}&sendingDate={{ cash_out_summary.sendingDate }}" class="btn btn-success pull-right waves-effect waves-light">
+                                    <span class="fa {{ action.icon }}"></span> {{ action.title }}
+                                </a>
+                              {% endwith %}
+                            </td>
+                            <td>
+                                {% with table_actions.1 as action %}
+                                  <a href="{% url 'cash_outs_summary_download' %}?companyId={{ cash_out_summary.companyId }}&bankId={{ cash_out_summary.bankId}}&sendingDate={{ cash_out_summary.sendingDate }}" class="btn btn-success pull-right waves-effect waves-light">
+                                      <span class="fa {{ action.icon }}"></span> {{ action.title }}
+                                  </a>
+                                {% endwith %}
+                              </td>
+                          </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="white-box" style="width: 100%; display: flex; justify-content: flex-end;">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="datepicker">Descarga Mensual:</label>
+                    <input type="month" id="datepicker" name="datepicker" min="2018-01" class="form-control"><i class="fa fa-calendar"></i>
+                </div>
+
+                <div class="form-group">
+                    <select id="select-company" class="select form-control">
+                        <option value="2">Wenance</option>
+                        <option value="1">Creditos al Rio</option>
+                    </select>
+                </div>
+                    
+                <div class="form-group">
+                    <a id="btn-download-month" href="{% url 'cash_outs_summary_download' %}?sendingDate=2018-11" class="btn btn-success waves-effect waves-light">Descargar</a>
+                </div>
+
+            </form>               
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block onready %}
+function refresh_download(){
+    $('#btn-download-month').attr("href", '{% url 'cash_outs_summary_download' %}?companyId=' + $('#select-company').val() + '&sendingDate=' + $('#datepicker').val());
+}
+
+$('#cashout-table').DataTable({
+    "order": [[ 2, "desc" ]]
+});
+
+$('#datepicker').change(function() {
+    refresh_download();
+});
+
+$('#select-company').change(function() {
+    refresh_download();
+});
+
+$(document).ready(function(){
+    document.getElementById('datepicker').valueAsDate = new Date();
+    refresh_download();
+});
+
+{% endblock %}

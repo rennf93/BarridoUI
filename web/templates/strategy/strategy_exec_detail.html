@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% load static webtags %}
+{% block title %}Detalle Ejecución{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "strategy_exec" application_name %}">{% trans "Ejecuciones" %}</a></li>
+    <li class="active">Detalle Ejecución</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{% endblock %}
+
+{% block content %}
+
+    <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirma envío de rendiciones?
+                </div>
+                <div class="modal-body">
+                    Cuando usted aprueba un envío se realizan las siguientes operaciones:<br/>
+                    - Actualización de los montos de cuota disponibles para cada Agente Pagador / Banco.<br/>
+                    - Esta marca de intento de cobranza es tenida en cuenta para la creación de la próxima Cartera
+                    Activa para actualizar campos que hacen referencia a este evento.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-success btn-confirm-ok">Confirmar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirm-modal-cancel" tabindex="-1" role="dialog" aria-labelledby="confirm-modal"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirma cancelación del envío de rendiciones?
+                </div>
+                <div class="modal-body">
+                    Se van a deshacer las siguientes operaciones:<br/>
+                    - Actualización de los montos de cuota disponibles para cada Agente Pagador / Banco.<br/>
+                    - La marca de intento de cobranza que es tenida en cuenta para la creación de la próxima Cartera
+                    Activa para actualizar campos que hacen referencia a este evento.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-success btn-confirm-ok">Confirmar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encabezado -->
+    {% include header.get_template with data=header.data blocks=header.blocks %}
+    <!-- Encabezado Fin -->
+
+    <!-- Módulos -->
+    {% for module in modules %}
+        {% include module.get_template with data=module.data %}
+    {% endfor %}
+    <!-- Módulos fin -->
+
+{% endblock %}
+
+{% block onready %}
+    $('#confirm-modal').on('show.bs.modal', function(e) {
+        $(this).find('.btn-confirm-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+    $('#confirm-modal-cancel').on('show.bs.modal', function(e) {
+        $(this).find('.btn-confirm-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+{% endblock %}

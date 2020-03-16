@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="navbar-default">
+        <ul class="nav nav-tabs nav-justified">
+            {% for tab in tabs %}
+                <li role="presentation"
+                    class="{% if tab.active %}active{% endif %} {% if tab.enabled != True %}disabled{% endif %}">
+                    <a href="{{ tab.link }}">{{ tab.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

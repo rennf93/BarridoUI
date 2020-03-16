@@ -1,0 +1,51 @@
+/* Editable Inputs */
+
+.editable-button {
+    transition-duration: 200ms;
+    cursor: pointer;
+    display: none;
+}
+
+.hoverable {
+    transition-duration: 200ms;
+    opacity: 0;
+}
+
+.llamador-hoverable {
+    opacity: 1;
+}
+
+.llamador-subte {
+    opacity: 1;
+}
+
+.subte {
+    transition-duration: 200ms;
+    transition-delay: 1s;
+    opacity: 1;
+}
+
+.llamador-hoverable:hover + .hoverable  {
+    opacity: 1;
+}
+
+.helper {
+    transform: translate(-100%, 200%);
+    color: #00AEEF;
+}
+
+.editable-ok {
+    color: #28A745
+}
+
+.editable-ok:hover {
+    color: #28FF45
+}
+
+.editable-cancel {
+    color: #dc1d25
+}
+
+.editable-cancel:hover {
+    color: #FF3545
+}

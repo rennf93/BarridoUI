@@ -1,0 +1,10 @@
+<li>
+    <a href="#">
+        <span><i class="{{ data.icon }}"></i> {{ data.title }}<i class="fa arrow"></i></span>
+    </a>
+    <ul class="nav nav-second-level collapse">
+        {% for accordion_list_item in data.items %}
+            {% include accordion_list_item.template with data=accordion_list_item %}
+        {% endfor %}
+    </ul>
+</li>

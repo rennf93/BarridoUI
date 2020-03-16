@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Scores{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Scores</li>
+{% endblock %}
+
+{% block pagetitle %}Scores{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            <a href="{% url 'score_create' %}" class="btn btn-success pull-right waves-effect waves-light">
+                <span  class="fa fa-plus"></span> Nuevo Scoring
+            </a>
+        </div>
+        <h3 class="box-title">lista de scores</h3>
+        <p class="text-muted">Lista de <code>scores</code></p>
+        <div class="table">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Policy</th>
+                        <th>Workflow</th>
+                        <th>Estatus</th>
+                        <th>Fecha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in object_list %}
+                    <tr>
+                        <td>{{ score.policy }}</td>
+                        <td>{{ score.workflow }}</td>
+                        <td>{{ score.get_status_display }}</td>
+                        <td>{{ score.created_at }}</td>
+                        <td>
+                            {% if score.result %}
+                            <a class="btn btn-info" href="{{ score.result.url }}">
+                                <span  class="fa fa-cloud-download"></span> Descargar
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

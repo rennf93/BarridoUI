@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Estrategias de Buckets{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "buckets_strategy" application %}">{% trans "Estrategias" %}</a></li>
+    <li class="active">Nueva Estrategia de Buckets</li>
+{% endblock %}
+
+{% block pagetitle %} {{ application_description }}{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <h3 class="box-title">nueva estrategia</h3>
+        <p class="text-muted">Creación de <code>Nueva Estrategia de Buckets</code></p>
+        <div class="form">
+            <form enctype="multipart/form-data" method="post" id="strategies_form" novalidate>{% csrf_token %}
+                {{ form | crispy }}
+                <hr />
+                <div class="form-group text-right">
+                    <button class="btn btn-success text-uppercase waves-effect waves-light" type="submit">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

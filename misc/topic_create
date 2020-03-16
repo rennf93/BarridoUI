@@ -1,0 +1,14 @@
+{
+   "name":"active_wallet_report_start"
+ , "engine":"AWS"
+ , "description": "Envia la solicitud para generacion de la Cartera Activa desde Jasper"
+ , "owner": "ezuazu"
+}
+
+{
+  "name":"barridoui_active_wallet_report_callback",
+  "topic":"active_wallet_report_callback",
+  "visibility_timeout":30,
+  "endpoint" : "https://barridoui.dev.fintechpeople.io/api/active_wallet/download/callback",
+  "type":"push"
+}

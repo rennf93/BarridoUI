@@ -1,0 +1,43 @@
+<div class="col-md-12">
+    <div class="white-box">
+        {% for action in actions %}
+            {% include "components/action_button.html" with action=action %}
+        {% endfor %}
+        <h3 class="box-title">lista de compañías</h3>
+        <p class="text-muted">Lista de compañías enroladas en el <code>Middleware</code></p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>CUIT</th>
+                <th>URL de Mambu</th>
+                <th>Usuario Mambu</th>
+                <th>Tax Source Key</th>
+                <th>Timezone</th>
+                <th>PIC Activo</th>
+                <th>PIC EncodedKey</th>
+                <th>PIC Monto Maximo</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for company in companies %}
+                <tr>
+                    <td>{{company.code}}</td>
+                    <td>{{company.cuit}}</td>
+                    <td>{{company.mambuUrl}}</td>
+                    <td>{{company.mambuUser}}</td>
+                    <td>{{company.taxSourceKey}}</td>
+                    <td>{{company.timezone}}</td>
+                    <td>{% include "components/boolean_icon.html" with value=company.picAvailable %}</td>
+                    <td>{{company.picKey}}</td>
+                    <td>{{company.picMaxAmount}}</td>
+                    <td>
+                        {% include "components/actions_dropdown.html" with element_id=company.code dropdown_actions=table_actions %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

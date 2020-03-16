@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Cash Outs{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "cash_out_summaries" %}">{% trans "Informe de Cash Outs" %}</a></li>
+    <li><a href="{% url "cash_outs" %}?{{ request.session.cash_out_summaries_cash_outs_qs }}">{% trans "Cash Outs" %}</a></li>
+    <li class="active">Préstamos</li>
+{% endblock %}
+
+{% block pagetitle %}Procesos Cash Out{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="white-box">
+            <h3 class="box-title">Préstamos de un Cash Out</h3>
+            <p class="text-muted">Lista de <code>Préstamos</code> procesados en un determinado Cash Out.</p>
+            <div class="table-responsive overflow-visible">
+                <table class="table table-striped" id="operations-table">
+                    <thead>
+                        <tr>
+                            <th>ID de préstamo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cash_out_loan in cash_out_loans.content %}
+                        <tr>
+                            <td>{{ cash_out_loan.loanId }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block onready %}
+$('#operations-table').DataTable({
+    "order": [[ 0, "desc" ]]
+});
+{% endblock %}

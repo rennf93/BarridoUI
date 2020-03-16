@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Estrategias de Salidas{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Estrategias de Salidas</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+                <a href="#" class="btn btn-success pull-right waves-effect waves-light">
+                    <span class="fa fa-plus"></span> Nueva estrategia
+                </a>
+            </div>
+            <h3 class="box-title">lista de estrategias de salidas
+                <a href="{% url "buckets_strategy" application %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>
+                </a>
+            </h3>
+            <p class="text-muted">Lista de estrategias de Salidas</p>
+            <div class="table-responsive overflow-visible">
+                <table class="table table-striped" id="data-table">
+                    <thead>
+                    <tr>
+                        <th>Ver</th>
+                        <th>Descripción</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for strategy in outputs_strategies %}
+                        <tr data-toggle="collapse" data-target="#collapseTable_strategy{{ forloop.counter }}"
+                            class="clickable">
+                            <td style="width: 100px">
+                                <a data-toggle="collapse" href="#collapseTable_strategy{{ forloop.counter }}"
+                                   role="button" aria-expanded="false" class="btn btn-success waves-effect">
+                                    DETALLE
+                                </a>
+                            </td>
+                            <td>{{ strategy.description }}</td>
+                        </tr>
+                        <tr class="collapse multi-collapse" id="collapseTable_strategy{{ forloop.counter }}"
+                            data-target="#collapseTable_settings{{ forloop.counter }}" class="clickable">
+                            <td></td>
+                            <td>
+                                <table class="table" id="paying_conf" style="width: 100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Regla</th>
+                                        <th style="width: 280px"></th>
+                                        <th>Código</th>
+                                        <th>Fmto. Salida</th>
+                                        <th>Tags</th>
+                                        <th>Evalúa próximo?</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for outputsSetting in strategy.outputsSettings %}
+                                        <tr data-toggle="collapse"
+                                            data-target="#collapseTable_condition{{ forloop.counter }}"
+                                            class="clickable" id="collapseTable_settings{{ forloop.counter }}">
+                                            <td colspan="2"><a data-toggle="collapse"
+                                                   href="#collapseTable_condition{{ forloop.counter }}"
+                                                   role="button" aria-expanded="false">
+                                                {{ outputsSetting.name }} <i class="fa fa-angle-right"
+                                                                             aria-hidden="true"></i>
+                                            </a>
+                                            </td>
+                                            <td>{{ outputsSetting.code }}</td>
+                                            <td>{{ outputsSetting.outputFormat }}</td>
+                                            <td>{{ outputsSetting.tags }}</td>
+                                            <td>{{ outputsSetting.continueNextCondition }}</td>
+                                        </tr>
+                                        <tr class="collapse collapse"
+                                            id="collapseTable_condition{{ forloop.counter }}"
+                                            class="clickable">
+                                            <td></td>
+                                            <td colspan="5">
+                                                <table style="width: 100%" class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width: 10px">#</th>
+                                                        <th>Condiciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for condition in outputsSetting.conditionExpressions %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }}</td>
+                                                            <td>{{ condition }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                                <table style="width: 100%" class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Nombre Archivo Salida</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tr>
+                                                        <td>{{ outputsSetting.fileName }}</td>
+                                                    </tr>
+                                                </table>
+                                                {% if outputsSetting.extraData|length > 0 %}
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width: 10px">#</th>
+                                                        <th>Extra Data</th>
+                                                        <th>Valor</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for extraData in outputsSetting.extraData.items %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }}</td>
+                                                            <td>{{ extraData.0 }}</td>
+                                                            <td>{{ extraData.1 }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

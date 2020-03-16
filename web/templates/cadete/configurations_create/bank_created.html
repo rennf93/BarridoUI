@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Configuraciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Configuraciones</li>
+{% endblock %}
+
+{% block pagetitle %}Configuraciones{% endblock %}
+
+{% block content %}
+    {% include "components/stepper_header.html" with data=stepper_header %}
+    <div class="row">
+        {% include "cadete/configurations_create/"|add:create_template with banco=banco %}
+    </div>
+{% endblock %}

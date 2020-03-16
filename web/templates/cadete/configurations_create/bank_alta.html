@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Configuraciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Configuraciones</li>
+{% endblock %}
+
+{% block pagetitle %}Configuraciones{% endblock %}
+
+{% block content %}
+    {% include "components/stepper_header.html" with data=stepper_header %}
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Nueva configuración para {{ bank_name | capfirst}}</div>
+            <div class="panel-body">
+                <div class="form col-md-10 col-md-offset-1">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

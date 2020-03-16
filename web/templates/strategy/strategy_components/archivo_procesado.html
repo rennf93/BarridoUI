@@ -1,0 +1,30 @@
+{% if strategy_execution_detail.input_file != None %}
+    <div class="panel-theme">
+        <div class="panel-heading">
+            <h2 class="panel-title">Archivo procesado</h2>
+        </div>
+        <div class="panel-body">
+            <table id="files_result_list color-black" style="width: 100%"
+                   class="table table-sm table-striped table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>
+                        <div>Archivos</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        <a href="{% url 'download_file' strategy_execution_detail.input_file.fileStorageKeyId %}?file_name={{ strategy_execution_detail.input_file.fileName }}"
+                           class="action">
+                            <i class="fa fa-download"></i>
+                            {{ strategy_execution_detail.input_file.fileName }}
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}

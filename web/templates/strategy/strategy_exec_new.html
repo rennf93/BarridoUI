@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Ejecuciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "strategy_exec" application %}">{% trans "Ejecuciones" %}</a></li>
+    <li class="active">Nueva Ejecucion</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <p class="text-muted">Formulario para crear una <code>nueva ejecución</code><br></p>
+        {% if form.validation_message.value != "" %}
+        <p style="color:red; font-style:italic;text-align: center;">
+            {{ form.validation_message.value }}
+        </p>
+        {% else %}
+        <div class="module col-md-6 col-xs-12">
+            <p><strong>Fecha inicio de ciclo:</strong> {{ form.start_collection_date.value }}</p>
+        </div>
+        <div class="module col-md-6 col-xs-12">
+            <p><strong>Fecha primer quincena de ciclo:</strong> {{ form.middle_collection_date.value }}</p>
+        </div>
+        <div class="module col-md-6 col-xs-12">
+            <p><strong>Fecha fin de ciclo:</strong> {{ form.end_collection_date.value }}</p>
+        </div>
+        <br></br>
+        <br></br>
+        <div class="form">
+            <form enctype="multipart/form-data" method="post" id="strategies_form" novalidate>{% csrf_token %}
+                {{ form | crispy }}
+                <hr />
+                <div class="form-group text-right">
+                    <button class="btn btn-success text-uppercase waves-effect waves-light" type="submit">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>    
+
+{% endblock %}
+
+{% block onready %}
+$('form').submit(function() {
+    $(this).find("button[type='submit']").prop('disabled',true);
+  });
+{% endblock %}

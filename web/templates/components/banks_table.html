@@ -1,0 +1,50 @@
+<div class="col-md-12">
+    <div class="white-box">
+        {% for action in actions %}
+            {% include "components/action_button.html" with action=action %}
+        {% endfor %}
+        <h3 class="box-title">lista de Bancos</h3>
+        <p class="text-muted">Lista de bancos de <code>{{ company }}</code></p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Codigo</th>
+                <th>Porcentaje aceptacion cashin</th>
+                <th>Convenio</th>
+                <th>Desembolso automatico</th>
+                <th>Monto max. de desembolsos por dia</th>
+                <th>Devolucion automatica</th>
+                <th>Monto max. de devoluciones por dia</th>
+                <th>Validacion de montos maximos</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for bank in banks %}
+                {% with banco=company|add:","|add:bank.code %}
+                    <tr>
+                        <td>{{ bank.id }}</td>
+                        <td>{{ bank.name }}</td>
+                        <td>{{ bank.code }}</td>
+                        <td>{{ bank.maxAcceptedRate }}</td>
+                        <td>{{ bank.agreement }}</td>
+                        <td>{% include "components/boolean_icon.html" with value=bank.cashoutAvailable %} </td>
+                        <td>{{ bank.cashoutMaxAmountByDay }}</td>
+                        <td>{% include "components/boolean_icon.html" with value=bank.refundAvailable %} </td>
+                        <td>{{ bank.refundMaxAmountByDay }}</td>
+                        <td>{% include "components/boolean_icon.html" with value=bank.validationAmountActive %} </td>
+                        <td>
+                            <a href="{% url "company_bank_edit" company bank.code %}"
+                               class="btn btn-success pull-right waves-effect waves-light">
+                                <span class="fa fa-edit"></span> Editar
+                            </a>
+                        </td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+@media all and (orientation: portrait) {
+    .sidebar {
+        left: initial !important;
+        transition: 200ms;
+    }
+
+    .sidebar:target {
+        display: block;
+        width: 100%;
+        font-size: 24px
+    }
+
+    .sidebar-menu-picaporte {
+        display: block;
+    }
+}

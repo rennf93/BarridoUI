@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Configuraciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Configuraciones</li>
+{% endblock %}
+
+{% block pagetitle %}Configuraciones{% endblock %}
+
+{% block content %}
+    {% include "components/stepper_header.html" with data=stepper_header %}
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">Elija banco</div>
+            <div class="panel-body">
+                <div class="btn-group-lg" role="group" aria-label="Tipo de bancos">
+                    {% for bank in bancos %}
+                    <a href="{% url "configurations_create_bank" config_type='banks' bank_name=bank %}" class="btn btn-default">{{ bank }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

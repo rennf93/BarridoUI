@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Estrategias de Nivel I{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Estrategias de Nivel I</li>
+{% endblock %}
+
+{% block pagetitle %} {{ application_description }} {%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            <a href="#" class="btn btn-success pull-right waves-effect waves-light">
+                <span  class="fa fa-plus"></span> Nueva estrategia 
+            </a>
+        </div>
+        <h3 class="box-title">Estrategias de Nivel I
+            <a href="{% url "buckets_strategy" application %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>                    
+            </a>                
+        </h3>
+        <p class="text-muted">Lista de Estrategias de Nivel I</p>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="data-table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paying in paying_agents_strategies %}
+                    <tr>
+                        <td>{{ paying.description }}</td>
+                        <td> 
+                            {% include "components/actions_dropdown.html" with element_id=paying.id dropdown_actions=table_actions %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#data-table').DataTable();
+{% endblock %}

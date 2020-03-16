@@ -1,0 +1,20 @@
+<div class="panel panel-success">
+    <div class="panel-heading">{{ banco.data.bank_name | capfirst }} creado exitosamente!</div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            {% for key, value in banco.items %}
+                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            {% for key, value in banco.data.items %}
+                <p><strong>{{ key }}:</strong> {{ value }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="btn-group-lg">
+            <a class="btn btn-default" href="{% url 'configurations_create' config_type='banks' %}">VOLVER A BANCOS</a>
+        </div>
+    </div>
+</div>

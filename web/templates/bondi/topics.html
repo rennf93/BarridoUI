@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Topics{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Topics</li>
+{% endblock %}
+
+{% block pagetitle %}Bondi Topics{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            <!-- <a href="{% url 'buckets_strategy_create' %}" class="btn btn-success pull-right waves-effect waves-light">
+                <span  class="fa fa-plus"></span> Nueva estrategia 
+            </a> -->
+        </div>
+        <h3 class="box-title">lista de topics
+            <a href="{% url "topics" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>                    
+            </a>                
+        </h3>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="bondi-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Engine</th>
+                        <th>Usuario</th>
+                        <th>F. Creación</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for topic in topics.topics %}
+                    <tr>
+                        <td>{{ topic.name }}</td>
+                        <td>{{ topic.description }}</td>
+                        <td>{{ topic.engine }}</td>
+                        <td>{{ topic.owner }}</td>
+                        <td>{{ topic.created_at }}</td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#bondi-table').DataTable();
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Scores{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "score_list" %}">{% trans "Scores" %}</a></li>
+    <li class="active">Nuevo Score</li>
+{% endblock %}
+
+{% block pagetitle %}Nuevo Score{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <h3 class="box-title">nueva estrategia</h3>
+        <p class="text-muted">Formulario para crear una lista de <code>scores</code></p>
+        <div class="form">
+            <form enctype="multipart/form-data" method="post" id="score_form" novalidate>{% csrf_token %}
+                {{ form | crispy }}
+                <hr />
+                <div class="form-group text-right">
+                    <button class="btn btn-success text-uppercase waves-effect waves-light" type="submit">
+                        Generar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

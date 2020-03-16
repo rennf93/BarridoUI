@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Topics{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Subscriber Messages</li>
+{% endblock %}
+
+{% block pagetitle %}Bondi Subscriber Messages{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="module" style="padding-left: 15px">
+            <div class="row">
+                <form type="get" action="{% url "subscriber_messages" %}" style="margin: 0" class="form-inline">
+                    <div class="form-group">
+                        <label for="search_box">Subscriber:</label>
+                        <input  id="search_box" type="text" name="search_box" value="{{ subscriber_id }}"  placeholder="Search..." class="form-control">
+                    </div>
+                        <button id="search_submit" type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+        </div>
+        <hr/>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="bondi-table">
+                <thead>
+                    <tr>
+                        <th style="max-width: 50px">Id mensaje</th>
+                        <th>Topic</th>
+                        <th>Timestamp</th>
+                        <th>Accion</th>
+                        <th style="max-width: 500px">Mensaje</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for men in subscriber_messages.messages %}
+                    <tr>
+                        <td style="max-width: 50px">{{ men.message_id }}</td>
+                        <td>{{ men.message.topic }}</td>
+                        <td>{{ men.message.timestamp }}</td>
+                        <td><a href="{% url 'delete_message' %}?s={{ subscriber_id }}&m={{ men.message_id }}&t={{ men.delete_token|urlencode }}" class="btn btn-success">Delete</a></td>
+                        <td style="max-width: 500px">{{ men.message.payload }}</td>
+                        <td>
+                            
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#bondi-table').DataTable();
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Estrategias de Nivel I{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "paying_agents_strategy" application %}">{% trans "Estrategias Bancos" %}</a></li>
+    <li class="active">Detalle Estrategia de Asig. de Ag. de Pago</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{% endblock %}
+
+{% block content %}
+    <div id="content" class="white-box">
+        <div id="content-main">
+            <div class="module" id="changelist">
+                <h2>Estrategias de Nivel I: <b>{{ paying_agents_strategy.description }}</b></h2>
+            </div>
+
+            <div id="changelist">
+                <h2>Configuración</h2>
+                <table class="table" id="paying_conf" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                        <th>Cuota Monto</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for paying in paying_agents_strategy.payingAgents %}
+                        <tr data-toggle="collapse" data-target="#collapseTable{{ forloop.counter }}" class="clickable">
+                            <td style="width: 80px">
+                                <a data-toggle="collapse" href="#collapseTable{{ forloop.counter }}" role="button"
+                                   aria-expanded="false">
+                                   {{ paying.priority }} <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                            <td>{{ paying.code }}</td>
+                            <td>{{ paying.name }}</td>
+                            <td>{{ paying.quotaAmount }}</td>
+                        </tr>
+                        <tr class="collapse multi-collapse" id="collapseTable{{ forloop.counter }}">
+                            <td></td>
+                            <td colspan="3">
+                                <table id="paying_conf_cond" style="width: 100%" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10px">#</th>
+                                        <th>Condiciones</th>
+                                    </tr>
+                                    </thead>
+                                    {% for condition in paying.conditionExpressions %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ condition }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                                <table id="paying_conf_action" style="width: 100%" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10px">#</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    {% for action in paying.actionExpressions %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ action }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <hr/>
+            <div class="text-right">
+                <a href="{% url "paying_agents_strategy" application %}"
+                   class="btn btn-success text-uppercase waves-effect waves-light">
+                    Volver
+                </a>
+            </div>
+
+            <hr/>
+
+            <div id="diagram"/>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block onready %}
+
+    <!-- $(document).ready(function(){
+        var diagra = flowchart.parse('st=>start: Start\n' +
+                                      'e=>end\n' +
+                                      'st->e');
+        diagra.drawSVG('diagram');
+    }); -->
+
+{% endblock %}

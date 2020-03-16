@@ -1,0 +1,5 @@
+<span class="editable-span pointer llamador-hoverable" data-name="{{ name }}" id="{{ name }}-span">{{ value }}</span><i class="fa fa-edit hoverable"></i>
+<span data-name="{{ name }}" id="{{ name }}-ok-button" class="fa fa-2x fa-check editable-button editable-ok"
+      onclick="sendUpdate('{{ action }}','{{ name }}', '{{ csrf_token }}', '{{ id }}')"></span>
+<span data-name="{{ name }}" id="{{ name }}-cancel-button"
+      class="fa fa-2x fa-times editable-button editable-cancel"></span>

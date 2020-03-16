@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Cashin Bitacora{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Cashin Bitacora</li>
+{% endblock %}
+
+{% block pagetitle %}Cashin Bitacora{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+        </div>
+        <h3 class="box-title">lista de cashin resumen bitacora
+            <a href="{% url "cashin_binnacle_summary" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>                    
+            </a>                
+        </h3>
+        <p class="text-muted">Lista de cashin resumen bitacora</p>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="data-table">
+                <thead>
+                    <tr>
+                        <th>Compañia</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for summary in cash_in_binnacle_summary %}
+                    <tr>
+                        <td>{{ summary.companyCode }}</td>
+                        <td>{{ summary.date }}</td>
+                        <td>{{ summary.count }}</td>
+                        <td>
+                            {% with table_actions.0 as action %}
+                            <a href="{% url 'cashin_binnacle_download' summary.date %}?companyCode={{ summary.companyCode }}" class="btn btn-success pull-right waves-effect waves-light">
+                                <span class="fa {{ action.icon }}"></span> {{ action.title }}
+                            </a>
+                            {% endwith %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#data-table').DataTable({
+    "order": [[ 1, "desc" ]]
+});
+{% endblock %}

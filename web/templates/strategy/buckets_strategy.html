@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Estrategias de Buckets{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Estrategias de Buckets</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            <a href="{% url 'buckets_strategy_create' application %}" class="btn btn-success pull-right waves-effect waves-light">
+                <span  class="fa fa-plus"></span> Nueva estrategia 
+            </a>
+        </div>
+        <h3 class="box-title">estrategias de buckets
+            <a href="{% url "buckets_strategy" application %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>                    
+            </a>                
+        </h3>
+        <p class="text-muted">Lista de Estrategias de Buckets</p>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="strategies-table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Estatus</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for strategy in buckets_strategies %}
+                    <tr>
+                        <td>{{ strategy.description }}</td>
+                        <td>{{ strategy.status }}</td>
+                        <td>
+                           {% include "components/actions_dropdown.html" with element_id=strategy.id dropdown_actions=table_actions %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#strategies-table').DataTable();
+{% endblock %}

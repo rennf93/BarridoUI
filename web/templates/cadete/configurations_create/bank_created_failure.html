@@ -1,0 +1,19 @@
+<div class="panel panel-danger">
+    <div class="panel-heading">Error al crear: {{ banco.config_name | capfirst }} !</div>
+    <div class="panel-body">
+        <div class="well alert">
+            No se pudo actualizar el banco
+        </div>
+        <ul class="list-group">
+            {% for error in banco.errors.items %}
+                <li class="list-group-item alert-danger">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <div class="btn-group-lg">
+            <a class="btn btn-default" onclick="history.back()">REINTENTAR</a>
+            <a class="btn btn-default" href="{% url 'configurations_create' config_type='banks' %}">VOLVER A BANCOS</a>
+        </div>
+    </div>
+</div>

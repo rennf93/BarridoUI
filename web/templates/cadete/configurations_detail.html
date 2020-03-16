@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+{% block title %}Configuraciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "configurations" config_type=config_type %}">{% trans "Configuraciones" %}</a></li>
+    <li class="active">Detalle Configuración</li>
+{% endblock %}
+
+{% block pagetitle %}Detalle Configuración{% endblock %}
+
+{% block content %}
+    <div id="content" class="white-box">
+        <div id="content-main">
+            {% include "cadete/configurations_detail/"|add:detail_template with config_detail=config_detail action=action id=id %}
+            <hr/>
+            <div class="row text-right">
+                <a href="{% url "configurations" config_type=config_type %}" class="btn btn-success text-uppercase waves-effect waves-light">
+                    Volver
+                </a>
+            </div>
+        </div>
+    </div>
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/components/templates.js" %}"></script>
+    <script src="{% static "js/components/editable_span.js" %}"></script>
+{% endblock %}

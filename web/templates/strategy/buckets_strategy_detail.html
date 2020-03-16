@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Detalle Estrategia de Buckets{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "paying_agents_strategy" application %}">{% trans "Estrategias Bancos" %}</a></li>
+    <li class="active">Detalle Estrategia de Buckets</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{% endblock %}
+
+{% block content %}
+    <div id="content" class="white-box">
+        <div id="content-main">
+            <div class="module" id="changelist">
+                <h2>Estrategia de Bucket: <b>{{ buckets_strategy.description }}</b></h2>
+            </div>
+
+            <div id="changelist">
+                <h2>Configuración</h2>
+                <table class="table" id="paying_conf" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Nombre de Bucket</th>
+                        <th>Evalúa próximo?</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for bucket in buckets_strategy.buckets %}
+                        <tr data-toggle="collapse" data-target="#collapseTable_cond_bucket{{ forloop.counter }}"
+                            class="clickable">
+                            <td style="width: 80px">
+                                <a data-toggle="collapse" href="#collapseTable_cond_bucket{{ forloop.counter }}"
+                                   role="button"
+                                   aria-expanded="false">
+                                    {{ bucket.order }} <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                            <td>{{ bucket.name }}</td>
+                            <td>{{ bucket.continueNextCondition }}</td>
+                        </tr>
+                        <tr class="collapse multi-collapse" id="collapseTable_cond_bucket{{ forloop.counter }}">
+                            <td></td>
+                            <td colspan="2">
+                                <table style="width: 100%" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 10px">#</th>
+                                        <th>Condiciones</th>
+                                    </tr>
+                                    </thead>
+                                    {% for condition in bucket.conditionExpressions %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ condition }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                                <table style="width: 100%" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Reglas de división del débito</th>
+                                    </tr>
+                                    </thead>
+                                    {% for divisionRule in bucket.debtDivisionRules %}
+                                        <tr>
+                                            <td>Regla {{ divisionRule.order }}</td>
+                                            <td>
+                                                <table style="width: 100%" class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width: 20px">#</th>
+                                                        <th>Condiciones</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for divisionRuleCond in divisionRule.conditionRuleExpressions %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }}</td>
+                                                            <td> {{ divisionRuleCond }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                                <table style="width: 100%" class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width: 10px">Orden</th>
+                                                        <th>Regla de división</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for divisionRuleRule in divisionRule.divisionRule %}
+                                                        <tr>
+                                                            <td>{{ forloop.counter }}</td>
+                                                            <td> {{ divisionRuleRule }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <hr/>
+            <div class="text-right">
+                <a href="{% url "paying_agents_strategy" application %}"
+                   class="btn btn-success text-uppercase waves-effect waves-light">
+                    Volver
+                </a>
+            </div>
+
+            <hr/>
+
+            <div id="diagram"/>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block onready %}
+
+{% endblock %}

@@ -1,0 +1,43 @@
+.overflow-visible {
+    overflow: visible
+}
+
+.sidebar-menu-picaporte {
+    display: none;
+    cursor: pointer;
+    background-color: #2F323E;
+    color: white;
+    margin: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: white 1px solid;
+    padding-top: 10px;
+    text-align: center;
+    position: absolute;
+    float: right;
+    right: 0;
+    z-index: 10000
+}
+
+.sidebar-menu-picaporte a {
+    text-decoration: none
+}
+
+.sidebar-menu-picaporte-icon {
+    color: white;
+    font-size: 28px
+}
+
+.sidebar-menu-cierre {
+    padding: 7px
+}
+
+.top-total-right {
+    transform: translateY(-60px);
+    right: 0
+}
+
+.pointer {
+    cursor: pointer;
+}

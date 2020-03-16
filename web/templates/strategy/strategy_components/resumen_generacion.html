@@ -1,0 +1,52 @@
+<div class="panel-primary">
+    <div class="panel-heading">
+        <h2 class="panel-title">Resumen generación</h2>
+    </div>
+    <div class="panel-body">
+        {% if data.output_log != None or data.output_log or data.execution_log.error != None or data.execution_log.error %}
+            {% if data.output_log != None and data.output_log %}
+                <table id="resume_result_list" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Descripción de salida</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s_log in data.output_log %}
+                        <tr>
+                            <td>
+                                <span>&#8226;</span> {{ s_log }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+            {% if data.execution_log.error != None and data.execution_log.error %}
+                <table id="resume_result_list" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Error</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <p style="color: red">
+                                {{ data.execution_log.error }}
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        {% else %}
+            No hay detalles de resumen de generación
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div class="btn-group">
+    {% if dropdown_actions|length > 1 %}
+        <button typeactions_dropdown="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+            <span class="fa fa-cogs"></span> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            {% for action in dropdown_actions %}
+                {% if action.title == '-' %}
+                    <li role="separator" class="divider"></li>
+                {% else %}
+                    <li>
+                        <a href="{% url action.method element_id %}">
+                            {{ action.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% for action in dropdown_actions %}
+            {% include "components/action_button.html" with action=action element_id=element_id %}
+        {% endfor %}
+    {% endif %}
+</div>

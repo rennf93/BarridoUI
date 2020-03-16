@@ -1,0 +1,33 @@
+{% for out_files in strategy_execution_detail.output_files %}
+    <div class="panel-info">
+        <div class="panel-heading">
+            <h2 class="panel-title">{{ out_files.title }}</h2>
+        </div>
+        <div style="padding-left: 15px">
+            <table id="files_result_list" style="width: 100%"
+                   class="table table-sm table-striped table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>
+                        <div>Archivos</div>
+                    </th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for out_f in out_files.outputFiles %}
+                    <tr>
+                        <td>
+                            <a href='{% url "download_file" out_f.fileStorageKeyId %}?file_name="{{ out_f.fileName }}"'>
+                                <i class="fa fa-download"></i>
+                                {{ out_f.fileName }}
+                            </a>
+                        </td>
+                        <td>{{ out_f.status }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endfor %}

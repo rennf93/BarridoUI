@@ -1,0 +1,2 @@
+class ManualCashinError(Exception):
+    pass

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Carteras Activas de Clientes{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Carteras Activas de Clientes</li>
+{% endblock %}
+
+{% block pagetitle %}CashIO{% endblock %}
+
+{% block content %}
+
+    <div class="modal fade" id="confirm-modal" tabindex="-1"
+         role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    Confirmar proceso de cartera activa?
+                </div>
+                <div class="modal-body">
+                    Usted esta seguro de iniciar un proceso de generacion de cartera activa?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-success btn-confirm-ok">Confirmar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+                {% if perms.core.active_wallet_add_access %}
+                    <a data-toggle="modal" data-target="#confirm-modal"
+                       data-href="{% url 'active_wallet_process_create' %}"
+                       class="btn btn-success pull-right waves-effect waves-light">
+                        <span class="fa fa-plus"></span> Nuevo proceso
+                    </a>
+                {% endif %}
+            </div>
+            <h3 class="box-title">lista de carteras activas
+                <a href="{% url "active_wallet_process_list" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>
+                </a>
+            </h3>
+            <p class="text-muted">Lista de <code>procesos de carteras activas</code></p>
+            <div class="table-responsive overflow-visible">
+                <table class="table table-striped" id="active-wallet-process-table">
+                    <thead>
+                    <tr>
+                        <th>Fecha de creacion</th>
+                        <th>Estatus</th>
+                        <th>Tiempo aprox.</th>
+                        {% if perms.core.active_wallet_download_access %}
+                            <th>Debito Directo</th>
+                        {% endif %}
+                        {% if perms.core.active_wallet_download_collection_access %}
+                            <th>Cobranzas a Clientes</th>
+                        {% endif %}
+                        {% if perms.core.active_wallet_download_access_reno %}
+                            <th>Renos</th>
+                        {% endif %}
+                        {% if perms.core.active_wallet_download_fees_charged %}
+                            <th>Cuotas Cobradas</th>
+                        {% endif %}
+                        {% if perms.core.active_wallet_download_mifos_access %}
+                            <th>Mifos</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for active_wallet_process in object_list %}
+                        <tr>
+                            <td><span
+                                    class="hidden">{{ active_wallet_process.created_at|date:"Ymd" }}</span>{{ active_wallet_process.created_at }}
+                            </td>
+                            <td>{{ active_wallet_process.get_status_display }}</td>
+                            <td>
+                                {% ifnotequal active_wallet_process.status "finished" %}
+                                    {{ active_wallet_process.estimated_finish_date|timeuntil }}
+                                {% endifnotequal %}
+                            </td>
+                            {% if perms.core.active_wallet_download_access %}
+                                <td>
+                                    {% if active_wallet_process.active_wallet.result %}
+                                        <a class="btn btn-info"
+                                           href="{{ active_wallet_process.active_wallet.result.url }}">
+                                            <span class="fa fa-cloud-download"></span> Descargar
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if perms.core.active_wallet_download_collection_access %}
+                                <td>
+                                    {% if active_wallet_process.active_wallet.resultCollection %}
+                                        <a class="btn btn-info"
+                                           href="{{ active_wallet_process.active_wallet.resultCollection.url }}">
+                                            <span class="fa fa-cloud-download"></span> Descargar
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if perms.core.active_wallet_download_access_reno %}
+                                <td>
+                                    {% if active_wallet_process.active_wallet.resultReno %}
+                                        <a class="btn btn-info"
+                                           href="{{ active_wallet_process.active_wallet.resultReno.url }}">
+                                            <span class="fa fa-cloud-download"></span> Descargar
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if perms.core.active_wallet_download_fees_charged %}
+                                <td>
+                                    {% if active_wallet_process.active_wallet.resultFeesCharged %}
+                                        <a class="btn btn-info"
+                                           href="{{ active_wallet_process.active_wallet.resultFeesCharged.url }}">
+                                            <span class="fa fa-cloud-download"></span> Descargar
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if perms.core.active_wallet_download_mifos_access %}
+                                <td>
+                                    {% if active_wallet_process.active_wallet.resultMifosCa %}
+                                        <a class="btn btn-info"
+                                           href="{{ active_wallet_process.active_wallet.resultMifosCa.url }}">
+                                            <span class="fa fa-cloud-download"></span> Descargar
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block onready %}
+    $('#confirm-modal').on('show.bs.modal', function(e) {
+    $(this).find('.btn-confirm-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+    $('#active-wallet-process-table').DataTable({
+    "order": [[ 0, "desc" ]]
+    });
+{% endblock %}

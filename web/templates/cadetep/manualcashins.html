@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n static staticfiles %}
+{% block title %}Cashin Manual{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Cashin Manual</li>
+{% endblock %}
+
+{% block pagetitle %}Cashin Manual{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            {% if perms.core.manual_cashin_create %}
+                <a href="{% url 'manualcashins_create' %}"
+                   class="btn btn-success pull-right waves-effect waves-light">
+                    <span class="fa fa-plus"></span> Subir archivo
+                </a>
+            {% endif %}
+        </div>
+        <h3 class="box-title">Lista de Cashin Manual
+            <a href="{% url "manualcashins" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>
+            </a>
+        </h3>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="manualcashins-table">
+                <thead>
+                    <tr>
+                        <th>F.Creado</th>
+                        <th>Creador</th>
+                        <th>Tenant</th>
+                        <th>Canal</th>
+                        <th>Convenio</th>
+                        <th>Tipo Convenio</th>
+                        <th>Archivo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mc in manualcashins %}
+                    <tr>
+                        <td>{{ mc.created_at|date:"Y-m-d H:i:s" }}</td>
+                        <td>{{ mc.user }}</td>
+                        <td>{{ mc.tenant }}</td>
+                        <td>{{ mc.channel }}</td>
+                        <td>{{ mc.agreement }}</td>
+                        <td>{{ mc.agreement_type }}</td>
+                        <td>{{ mc.cashin_file }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#manualcashins-table').DataTable({
+        "order": [[ 0, "desc" ]]
+    });
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load i18n static staticfiles %}
+{% block title %}Operaciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Operaciones</li>
+{% endblock %}
+
+{% block pagetitle %}Operaciones{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            
+        </div>
+        <h3 class="box-title">lista de operaciones
+            <a href="{% url "operations" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>                    
+            </a>        
+        </h3>
+        <p class="text-muted">Últimas 100 operaciones de <code>cadete</code></p>
+        <div class="module">
+            <h3>Cashin
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default" data-toggle="collapse"
+                            data-target="#cash-in" aria-expanded="false" aria-controls="collapse">Filtros
+                    </button>
+                </div>
+            </h3>
+            <div class="row">
+                <div class="collapse" id="cash-in">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <label for="fecha">Fecha: </label>
+                            <input type="date" name="fecha" min="2018-01-01" id="fecha">
+                        </li>
+                        <li class="list-group-item">
+                            <label for="filtro">Tipo: </label> 
+                            <input type="radio" name="filtro" value="journal" id="filtro-journal" checked>Jornada 
+                            <input type="radio" name="filtro" value="rendition_date" id="filtro-rendition_date">Fecha rendición
+                        </li>
+                        <li class="list-group-item">
+                            <input type="submit" value="Filtrar" id="enviar-filtro" onclick="filtrar()" class="btn btn-success">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="operations-table">
+                <thead>
+                    <tr>
+                        <th>Pais</th>
+                        <th>Empresa</th>
+                        <th>Banco</th>
+                        <th>Config.</th>
+                        <th>F.Creado</th>
+                        <th>Jornada</th>
+                        <th>Procesado</th>
+                        <th>Enviado</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for operation in operations %}
+                    <tr>
+                        <td>{{ operation.country }}</td>
+                        <td>{{ operation.company }}</td>
+                        <td>{{ operation.bank }}</td>
+                        <td>{{operation.bank_config}}</td>
+                        <td>
+                            <span class="hidden">{{ operation.created_at|date:"YmdHi" }}</span>
+                            {{ operation.created_at }}
+                        </td>
+                        <td>
+                            <span class="hidden">{{ operation.updated_at|date:"YmdHi" }}</span>
+                            {{ operation.updated_at|date:"Y/m/d" }}
+                        </td>
+                        <td>
+                            {% include "components/boolean_icon.html" with value=operation.processed %}
+
+                            {% if operation.running == True or operation.running == "True" %}
+                                <span class="fa fa-spinner fa-spin"></span>
+                            {% endif %}                            
+                        </td>
+                        <td>
+                            {% include "components/boolean_icon.html" with value=operation.sent %}
+                        </td>
+                        <td>
+                            {% include "components/actions_dropdown.html" with element_id=operation.id dropdown_actions=table_actions %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#operations-table').DataTable();
+$.getScript("/static/js/cadete/operations.js");
+{% endblock %}

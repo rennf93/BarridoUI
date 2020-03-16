@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Operaciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "operations" %}">{% trans "Operaciones" %}</a></li>
+    <li class="active">Detalle Operación</li>
+{% endblock %}
+
+{% block pagetitle %}Detalle Operación{% endblock %}
+
+{% block content %}
+    <div id="content" class="white-box">
+        <div id="content-main">
+            <div class="module" id="changelist">
+                <h3>Operación: <b>{{ operation_detail.bank }}</b> -> <b>{{ operation_detail.rendition_date }}</b></h3>
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        {% if operation_detail.processed == True %}
+                            <div class="alert alert-info" role="alert">
+                                Operación procesada exitosamente!
+                            </div>
+                        {% endif %}
+                        <p><strong>Fecha rend.:</strong> {{ operation_detail.rendition_date }}</p>
+                        <p><strong>Empresa:</strong> {{ operation_detail.company }}</p>
+                        <p><strong>Banco:</strong> {{ operation_detail.bank }}</p>
+                        <p><strong>Canal:</strong> {{ operation_detail.channel }}</p>
+                        <p>
+                            <strong>Descargado:</strong> {% include "components/boolean_icon.html" with value=operation_detail.downloaded %}
+                        </p>
+                        <p><strong>Archivo:</strong>
+                            {% if operation_detail.downloaded %}
+                                <a href="{% url 'operations_rendition_file' operation_detail.id %}?file_name={{ operation_detail.filename }}">
+                                    {{ operation_detail.filename }}
+                                </a>
+                            {% endif %}
+                        </p>
+                        <p><strong>Intentos:</strong> {{ operation_detail.downloading_tries }}</p>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <p>
+                            <strong>Enviado:</strong> {% include "components/boolean_icon.html" with value=operation_detail.sent %}
+                        </p>
+                        <p>
+                            <strong>Procesado:</strong> {% include "components/boolean_icon.html" with value=operation_detail.processed %}
+                        </p>
+                        <p><strong>En
+                            ejecución:</strong> {% include "components/boolean_icon.html" with value=operation_detail.running %}
+                        </p>
+                        <p>
+                            <strong>Notificación:</strong> {% include "components/boolean_icon.html" with value=operation_detail.notification %}
+                        </p>
+                        <p><strong>Creado:</strong> {{ operation_detail.created_at }}</p>
+                        <p><strong>Actualizado:</strong> {{ operation_detail.updated_at }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="module">
+                <h3>Mensaje</h3>
+                <p style="color: red">
+                    {{ operation_detail.message }}
+                </p>
+            </div>
+            <div class="module">
+                <h3>Cashin</h3>
+                <div class="row">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default" data-toggle="collapse"
+                                data-target="#cash-in" aria-expanded="false" aria-controls="collapse">Ver resultado
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="collapse" id="cash-in">
+                        <ul class="list-group">
+                            {% for clave, valor in operation_detail.cashin_result.items %}
+                                <li class="list-group-item"><strong>{{ clave }}:</strong> {{ valor }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="module">
+                <h3>Archivos</h3>
+                <table id="files_result_list" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div>Nombre</div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for out_f in operation_detail.warehouse_files %}
+                        <tr>
+                            <td>
+
+                                <a href="{% url 'operations_warehouse_file' operation_id=operation_detail.id warehouse_id=forloop.counter0 %}?filename={{ out_f|cut:'/' }}">
+                                    {{ out_f }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <hr/>
+            <div class="text-right">
+                <a href="{% url "operations" %}" class="btn btn-success text-uppercase waves-effect waves-light">
+                    Volver
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

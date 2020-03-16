@@ -1,0 +1,36 @@
+<div class="panel-yellow">
+    <div class="panel-heading">
+        <h2 class="panel-title">Resumen por Agentes de Pago</h2>
+    </div>
+    <div class="panel-body">
+        <div style="padding-left: 15px">
+            <table id="files_result_list" style="width: 100%"
+                   class="table table-sm table-striped table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Banco</th>
+                    <th>Cant.Clientes</th>
+                    <th>Cant.Débitos</th>
+                    <th>Total a debitar</th>
+                    <th>Tags</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for os_fact_key, value in strategy_execution_detail.outputs.items %}
+                    {% if 'collection' in value.complexValue.output_tags.value and value.complexValue.record_count.value != '0' and value.complexValue.splitted_record_count.value != '0' %}
+                        <tr>
+                            <th scope="row">{{ value.complexValue.output_code.value }}</th>
+                            <td>{{ value.complexValue.output_name.value }}</td>
+                            <td style="text-align: right; padding-right: 10px;">{{ value.complexValue.record_count.value }}</td>
+                            <td style="text-align: right; padding-right: 10px;">{{ value.complexValue.splitted_record_count.value }}</td>
+                            <td style="text-align: right; padding-right: 10px;">{{ value.complexValue.total_amount.value }}</td>
+                            <td>{{ value.complexValue.output_tags.value }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

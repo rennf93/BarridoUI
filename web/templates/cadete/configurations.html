@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Configuraciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Configuraciones</li>
+{% endblock %}
+
+{% block pagetitle %}Configuraciones{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="white-box">
+            <div class="pull-right">
+                {% if perms.core.cadete_configuration_edit %}
+                        <a href="{% url 'configurations_create' config_type=config_type %}" class="btn btn-primary btn-lg">DAR DE ALTA</a>
+                {%  endif %}
+            </div>
+            <h3 class="box-title">lista de configuraciones
+                <a href="{% url "configurations" config_type=config_type %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>
+                </a>
+            </h3>
+            <p class="text-muted">Lista de configuraciones de <code>cadete</code></p>
+            <div class="table-responsive overflow-visible">
+                <table class="table table-striped" id="configurations-table">
+                    <thead>
+                    <tr>
+                        <th>Pais</th>
+                        <th>Empresa</th>
+                        <th>Via</th>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Creado</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for config in configurations %}
+                        <tr>
+                            <td>{{ config.country }}</td>
+                            <td>{{ config.company }}</td>
+                            <td>{{ config.via }}</td>
+                            <td>{{ config.config_name }}</td>
+                            <td>{{ config.config_type }}</td>
+                            <td>
+                                {% include "components/boolean_icon.html" with value=config.enabled %}
+                            </td>
+                            <td>
+                                <span class="hidden">{{ config.created_at|date:"Ymd" }}</span>
+                                {{ config.created_at }}
+                            </td>
+                            <td>
+                                <a href="{% url 'configurations_detail' config_type=config_type configuration_id=config.id %}" class="btn btn-success pull-right waves-effect waves-light">
+                                    <span class="fa fa-edit"></span> DETALLES
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block onready %}
+    $('#configurations-table').DataTable();
+{% endblock %}

@@ -1,0 +1,5 @@
+{% load static webtags %}
+
+<li class="{% active data.link %}">
+    <a href="{% url data.link data.args %}"><span>{{ data.title }}</span></a>
+</li>

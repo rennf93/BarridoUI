@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Cash Outs{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "cash_out_summaries" %}">{% trans "Informe de Cash Outs" %}</a></li>
+    <li class="active">Cash Outs</li>
+{% endblock %}
+
+{% block pagetitle %}Procesos Cash Out{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="white-box">
+            <h3 class="box-title">Cash Outs por compañía y banco</h3>
+            <p class="text-muted">Lista correspondientes a una compañía y banco procesados en el día.</p>
+            <div class="table-responsive overflow-visible">
+                <table class="table table-striped" id="operations-table">
+                    <thead>
+                        <tr>
+                            <th>Companía</th>
+                            <th>Banco</th>
+                            <th>Fecha / Hora de envío</th>
+                            <th>Número de entrega</th>
+                            <th>Monto envíado</th>
+                            <th>Cantidad de registros enviados</th>
+                            <th>Cantidad de acciones manuales</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for cash_out in cash_outs.content %}
+                        <tr>
+                            <td>{{ cash_out.companyCode }}</td>
+                            <td>{{ cash_out.bankName }}</td>
+                            <td>{{ cash_out.sendingDateTime }}</td>
+                            <td>{{ cash_out.deliveryNumber }}</td>
+                            <td>{{ cash_out.sentAmount }}</td>
+                            <td>{{ cash_out.numberOfSentRecords }}</td>
+                            <td>{{ cash_out.numberOfManualActions }}</td>
+                            <td>
+                            {% with table_actions.0 as action %}
+                                {% if cash_out.type and cash_out.type == 'DEVOLUCION' %}
+                                  <a href="{% url 'cash_out_refunds' cash_out.id %}" class="btn btn-success pull-right waves-effect waves-light">
+                                      <span class="fa {{ action.icon }}"></span> {{ action.title }}
+                                  </a>
+                                {% else %}
+                                  <a href="{% url 'cash_out_loans' cash_out.id %}" class="btn btn-success pull-right waves-effect waves-light">
+                                      <span class="fa {{ action.icon }}"></span> {{ action.title }}
+                                  </a>
+                                {% endif %}
+                            {% endwith %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block onready %}
+$('#operations-table').DataTable({
+    "order": [[ 2, "desc" ]]
+});
+{% endblock %}

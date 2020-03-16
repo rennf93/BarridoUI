@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Compañías{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li><a href="{% url "companies" %}">{% trans "Compañías" %}</a></li>
+    <li class="active"> Editar</li>
+{% endblock %}
+
+{% block pagetitle %}Editar Compañía{%  endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    function limit_input() {
+        var field = document.getElementById("number_field");
+        var max_length = 3;
+        if (field.value.length > max_length) {
+            field.value = field.value.slice(0, max_length);
+        }
+    }
+</script>
+<div class="col-md-12">
+    <div class="white-box">
+        <h3 class="box-title">Editar Compañia</h3>
+        <p class="text-muted">Formulario para edición de <code>{{ company_id }}</code></p>
+        <div class="form">
+            <form enctype="multipart/form-data" method="post" id="strategies_form" novalidate>{% csrf_token %}
+                {{ form | crispy }}
+                <hr />
+                <div class="form-group text-right">
+                    <button class="btn btn-success text-uppercase waves-effect waves-light" type="submit">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

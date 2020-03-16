@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="module col-md-6 col-xs-12" id="changelist">
+        <h2>Configuración: <b>{{ config_detail.config_name }}</b></h2>
+        <p><strong>Compañía:</strong> {{ config_detail.company }}</p>
+        <p><strong>Tipo:</strong> {{ config_detail.config_type }}</p>
+        <p><strong>Via:</strong> {{ config_detail.via }}</p>
+        <div style="float: none; margin-bottom: 6px"><strong>Habilitado:</strong>
+            <div class="btn-group btn-toggle">
+                {% if config_detail.enabled %}
+                    <a class="btn btn-xs btn-success active">ON</a>
+                    <a class="btn btn-xs btn-default">OFF</a>
+                {% else %}
+                    <a class="btn btn-xs btn-default">ON</a>
+                    <a class="btn btn-xs btn-danger active">OFF</a>
+                {% endif %}
+            </div>
+        </div>
+        <p><strong>Masked:</strong> {{ config_detail.masked }}</p>
+        <p><strong>Creado:</strong> {{ config_detail.created_at }}</p>
+        <p><strong>Actualizado:</strong> {{ config_detail.updated_at }}</p>
+    </div>
+    <div class="panel col-md-6 col-xs-12" id="changelist">
+        <h2>Data</h2>
+        {% if config_detail.via == 'web' %}
+            <p><strong>Banco:</strong> {{ config_detail.data.bank_name }}</p>
+            <p><strong>Contrato:</strong> {{ config_detail.data.contract_name }}</p>
+            <p><strong>CUIT:</strong> {{ config_detail.data.fiscal_id }}</p>
+            <p><strong>Usuario:</strong> {{ config_detail.data.username }}</p>
+            <p><strong>Clave:</strong> {{ config_detail.data.password }}</p>
+            <p><strong>Horas de trabajo</strong></p>
+            <p><strong>Desde:</strong> {{ config_detail.data.working_time.from }}
+                <strong>Hasta: </strong> {{ config_detail.data.working_time.to }} </p>
+            <p><strong>Francos:</strong></p>
+            <ul class="list-inline">
+                {% for day in config_detail.data.days_off %}
+                    <li class="list-group-item"><strong>{{ day }}</strong></li>
+                {% endfor %}
+            </ul>
+            <p><strong>Intentos de descarga: </strong>{{ config_detail.data.tries_to_download }}</p>
+            <p><strong>Moneda:</strong> {{ config_detail.data.currency }}</p>
+        {% elif config_detail.via == 'email' %}
+            <p><strong>Banco:</strong> {{ config_detail.data.bank_name }}</p>
+            <p><strong>Email:</strong> {{ config_detail.data.email }}</p>
+            <p><strong>Asunto:</strong> {{ config_detail.data.subject }}</p>
+            <p><strong>De:</strong> {{ config_detail.data.from }}</p>
+            <p><strong>Moneda:</strong> {{ config_detail.data.currency }}</p>
+        {% elif config_detail.via == 'ftp' %}
+            <p><strong>Banco:</strong> {{ config_detail.data.bank_name }}</p>
+            <p><strong>Url:</strong> {{ config_detail.data.url }}</p>
+            <p><strong>Username:</strong> {{ config_detail.data.username }}</p>
+            <p><strong>Password:</strong> {{ config_detail.data.password }}</p>
+            <p><strong>Desde:</strong> {{ config_detail.data.working_time.from }}
+                <strong>Hasta:</strong> {{ config_detail.data.working_time.to }} </p>
+            <p><strong>Francos:</strong></p>
+            <ul class="list-inline">
+                {% for day in config_detail.data.days_off %}
+                    <li class="list-group-item"><strong>{{ day }}</strong></li>
+                {% endfor %}
+            </ul>
+        {% elif config_detail.config_type == 'email_configuration' %}
+            <p><strong>Email:</strong> {{ config_detail.data.email_address }}</p>
+            <p><strong>SMTP Host:</strong> {{ config_detail.data.smtp_address }}</p>
+            <p><strong>SMTP Port:</strong> {{ config_detail.data.smtp_port }}</p>
+            <p><strong>SMTP User:</strong> {{ config_detail.data.smtp_user_name }}</p>
+            <p><strong>SMTP Pass:</strong> {{ config_detail.data.smtp_password }}</p>
+            <p><strong>POP3 Host:</strong> {{ config_detail.data.pop3_address }}</p>
+            <p><strong>POP3 Port:</strong> {{ config_detail.data.pop3_port }}</p>
+            <p><strong>POP3 User:</strong> {{ config_detail.data.pop3_user_name }}</p>
+            <p><strong>POP3 Pass:</strong> {{ config_detail.data.pop3_password }}</p>
+        {% elif config_detail.via == 'awsS3' %}
+            <p><strong>Bucket:</strong> {{ config_detail.data.bucket_name }}</p>
+            <p><strong>AWS Key Id:</strong> {{ config_detail.data.aws_key_id }}</p>
+            <p><strong>AWS Access Key:</strong> {{ config_detail.data.aws_access_key }}</p>
+            <p><strong>Region:</strong> {{ config_detail.data.region }}</p>
+        {% elif config_detail.via == 'rest' %}
+            <p><strong>Host:</strong> {{ config_detail.data.host }}</p>
+            <p><strong>Headers:</strong></p>
+            <ul class="list-group">
+                {% for clave, valor in config_detail.data.headers.items %}
+                    <li class="list-group-item"><strong>{{ clave }}:</strong> {{ valor }}</li>
+                {% endfor %}
+            </ul>
+        {% elif config_detail.config_type == 'account' %}
+            {% for clave, valor in config_detail.data.items %}
+                <p><strong>{{ clave }}:</strong> {{ valor }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

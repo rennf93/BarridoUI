@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Ejecuciones{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Ejecuciones</li>
+{% endblock %}
+
+{% block pagetitle %}{{ application_description }}{%  endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				Confirma envío de rendiciones?
+			</div>
+			<div class="modal-body">
+                    Cuando usted aprueba un envío se realizan las siguiuentes operaciones:<br/>
+                    - Actualización de los montos de cuota disponibles para cada Agente Pagador / Banco.<br/>
+                    - Esta marca de intento de cobranza es tenida en cuenta para la creación de la próxima Cartera Activa para actualizar campos que hacen referencia a este evento.                    
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+				<a class="btn btn-success btn-confirm-ok">Confirmar</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="confirm-modal-cancel" tabindex="-1" role="dialog" aria-labelledby="confirm-modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirma cancelación del envío de rendiciones?
+            </div>
+            <div class="modal-body">
+                    De van a deshacer las siguiuentes operaciones:<br/>
+                    - Actualización de los montos de cuota disponibles para cada Agente Pagador / Banco.<br/>
+                    - La marca de intento de cobranza que es tenida en cuenta para la creación de la próxima Cartera Activa para actualizar campos que hacen referencia a este evento.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-success btn-confirm-ok">Confirmar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+            {% if 'strategy_exec_add_access'|add:application_name in perms %}
+            <a href="{% url 'strategy_exec_new' application_name %}" class="btn btn-success pull-right waves-effect waves-light">
+                <span  class="fa fa-plus"></span> Nueva ejecución 
+            </a>
+            {% endif %}
+        </div>
+        <h3 class="box-title">lista de Ejecuciones
+            <a href="{% url "strategy_exec" application_name %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>                    
+            </a>
+        </h3>
+        
+        <p class="text-muted">Lista de Ejecuciones para <code>cartera activa</code></p>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="executions-table">
+                <thead>
+                    <tr>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Desc. Estado</th>
+                        <th>F.Inicio</th>
+                        <th>F.Fin</th>
+                        <th>Usuario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s_exe in strategy_executions %}
+                    <tr>
+                        <td>{{ s_exe.description }}</td>
+                        <td>{{ s_exe.status }}</td>
+                        <td>{{ s_exe.status_description }}</td>
+                        <td><span class="hidden">{{ s_exe.start_date|date:"Ymd" }}</span>{{ s_exe.start_date }}</td>
+                        <td><span class="hidden">{{ s_exe.finished_date|date:"Ymd" }}</span>{{ s_exe.finished_date }}</td>
+                        <td>{{ s_exe.user }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    <span  class="fa fa-cogs"></span><span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{% url 'strategy_exec_detail' s_exe.id %}">
+                                            <i class="fa fa-bars"></i>
+                                            Ver Detalle
+                                        </a>
+                                    </li>                                    
+                                    {% if s_exe.status == 'SUCCESS' %}
+                                    <li role="separator" class="divider"></li>
+                                    <li>                                        
+                                        <a href="{% url 'strategy_exec_export' s_exe.id %}?description=Archivos_Bancos_delivery">
+                                            <i class="fa fa-download"></i>
+                                            Descargar Archivos
+                                        </a>
+                                    </li>
+                                    <li>   
+                                        <a data-toggle="modal" data-target="#confirm-modal" data-href="{% url 'strategy_exec_approve' s_exe.id %}" role="button">
+                                            <span  class="fa fa-check"></span> Aprobar envío
+                                        </a>                                    
+                                    </li>                                    
+                                    {% endif %}
+                                    {% if s_exe.status == 'APPROVED' or 'SUCCESS' in s_exe.status %}
+                                    <li role="separator" class="divider"></li>
+                                    <li>   
+                                        <a data-toggle="modal" data-target="#confirm-modal-cancel" data-href="{% url 'strategy_exec_cancel' s_exe.id %}" role="button">
+                                            <span  class="fa fa-remove"></span> Cancelar envío
+                                        </a>                                    
+                                    </li>                                    
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#confirm-modal').on('show.bs.modal', function(e) {
+	$(this).find('.btn-confirm-ok').attr('href', $(e.relatedTarget).data('href'));
+});
+
+$('#confirm-modal-cancel').on('show.bs.modal', function(e) {
+	$(this).find('.btn-confirm-ok').attr('href', $(e.relatedTarget).data('href'));
+});
+
+$('#executions-table').DataTable({
+    "order": [[ 3, "desc" ]]
+});
+{% endblock %}

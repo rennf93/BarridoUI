@@ -1,0 +1,4 @@
+{% if data.progress_bar.enabled %}
+    {% include "components/progress_bar.html" with progress_bar=data.progress_bar %}
+{% endif %}
+{% include "components/tabber.html" with tabs=data.steps %}

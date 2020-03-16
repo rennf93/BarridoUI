@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static webtags %}
+{% get_applications_template request True as applications %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static "images/favicon.png" %}">
+    <title>WenanceUI | {% block title %}{% endblock %}</title>
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/bootstrap-datepicker.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/dataTables.bootstrap.css" %}" rel="stylesheet">
+    <link href="{% static "css/sidebar-nav.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/jquery.toast.css" %}" rel="stylesheet">
+    <link href="{% static "css/animate.css" %}" rel="stylesheet">
+    <link href="{% static "css/style.css" %}" rel="stylesheet">
+    <link href="{% static "css/barrido.css" %}" rel="stylesheet">
+    <link href="{% static "css/colors/default.css" %}" id="theme" rel="stylesheet">
+    <link href="{% static "css/components.css" %}" rel="stylesheet">
+    <link href="{% static "css/responsive.css" %}" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="fix-header">
+<!-- ============================================================== -->
+<!-- Preloader -->
+<!-- ============================================================== -->
+<div class="preloader">
+    <svg class="circular" viewBox="25 25 50 50">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+    </svg>
+</div>
+<!-- ============================================================== -->
+<!-- Wrapper -->
+<!-- ============================================================== -->
+<div id="wrapper">
+    <!-- ============================================================== -->
+    <!-- Topbar header -->
+    <!-- ============================================================== -->
+    <nav class="navbar navbar-default navbar-static-top m-b-0">
+        <div class="navbar-header">
+            <div class="top-left-part">
+                <!-- Logo -->
+                <a class="logo" href="/">
+                    {% get_settings "APP_COMPANY" as app_c %}
+                    {% with "images/"|add:app_c|add:"-logo.png" as imag %}
+                        <img src="{% static imag %}" height="25" width="220"/>
+                    {% endwith %}
+                </a>
+            </div>
+            <!-- /Logo -->
+            <ul class="nav navbar-top-links navbar-right pull-right">
+                <li>
+                    <a href="{% url "index" %}" class="btn-circle">
+                        <i class="fa fa-refresh"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="profile-pic" href="#">
+                        <b>
+                            Bienvenido {% firstof user.get_short_name user.get_username %}
+                        </b>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url "password_change" %}">
+                        <b>
+                            Cambiar password
+                        </b>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url "logout" %}">
+                        Salir
+                    </a>
+                </li>
+            </ul>
+            <div class="top-right">
+                <div class="sidebar-menu-picaporte"><a
+                        class="fa fa-bars sidebar-menu-picaporte-icon sidebar-menu-picaporte-open"
+                        href="#main-sidebar"></a></div>
+            </div>
+        </div>
+        <!-- /.navbar-header -->
+        <!-- /.navbar-top-links -->
+        <!-- /.navbar-static-side -->
+    </nav>
+    <!-- End Top Navigation -->
+    <!-- ============================================================== -->
+    <!-- Left Sidebar -->
+    <!-- ============================================================== -->
+    <div class="navbar-default sidebar" role="navigation" id="main-sidebar">
+        <div class="top-total-right">
+            <div class="sidebar-menu-picaporte sidebar-menu-cierre"><a class="fa fa-times sidebar-menu-picaporte-icon"
+                                                                       href="#"></a></div>
+        </div>
+        <div class="sidebar-nav slimscrollsidebar">
+            <div class="sidebar-head">
+                <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span>
+                </h3>
+            </div>
+            <ul class="nav" id="side-menu">
+                <li style="padding: 70px 0 0;"></li>
+                {% if perms.core.admin_access %}
+                    <li>
+                        <a href="/admin" target="_blank">
+                            <span><span class="fa fa-gears"></span> Admin<span></span></span>
+                        </a>
+                    </li>
+                {% endif %}
+
+            <!-- CashIO -->
+                {% if perms.core.cashio_access %}
+                    <li>
+                        <a href="#">
+                            <span><span class="fa fa-exchange"></span> CashIO<span class="fa arrow"></span></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            {% if perms.core.active_wallet_access %}
+                                <li class="{% active 'active_wallet_process_list' %}">
+                                    <a href="{% url "active_wallet_process_list" %}"><span>Carteras Activas</span></a>
+                                </li>
+                            {% endif %}
+                            {% if perms.core.agent_data_access %}
+                                <li><a href="{% url "agents_data" %}" class="{% active 'agents_data' %}">Agentes
+                                    Pago</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+            <!-- CashIO fin -->
+
+            <!-- Aplicaciones -->
+                {% for application_accordion in applications %}
+                    {% include application_accordion.template with data=application_accordion %}
+                {% endfor %}
+            <!-- Aplicaciones fin -->
+
+            <!-- Cadete -->
+                {% if perms.core.cadete_access %}
+                    <li>
+                        <a href="#">
+                            <span><span class="fa fa-money"></span> Cadete<span class="fa arrow"></span></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href={% url 'configurations' config_type='banks' %} class="{% active 'banks' %}"><span
+                                        class="fa fa-university"></span> Bancos</a></li>
+                            <li>
+                                <a href={% url 'configurations' config_type='accounts' %} class="{% active 'accounts' %}"><span
+                                        class="fa fa-user"></span> Cuentas</a></li>
+                            <li>
+                                <a href={% url 'configurations' config_type='mails' %} class="{% active 'mails' %}"><span
+                                        class="fa fa-envelope"></span> Mails</a></li>
+                            <li><a href={% url 'operations' %} class="{% active 'operations' %}"><span
+                                    class="fa fa-list"></span> Operaciones</a></li>
+                            <li><a href={% url 'manualcashins' %} class="{% active 'manualcashins' %}"><span
+                                    class="fa fa-money"></span> Cashin Manual</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+            <!-- Cadete fin -->
+
+            <!-- Riesgo -->
+                {% if perms.risk.score_access %}
+                    <li>
+                        <a href="#">
+                            <span><span class="fa fa-exclamation-triangle"></span> Riesgo<span class="fa arrow"></span></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{% url "score_list" %}" class="{% active 'score_list' %}">Scores</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if perms.core.middleware_access %}
+                    <li>
+                        <a href="#">
+                            <span><span class="fa fa-compress"></span> Middleware<span class="fa arrow"></span></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            {% if perms.core.bank_access %}
+                                <li><a href="{% url "banks" %}" class="{% active 'banks' %}">Bancos</a></li>
+                            {% endif %}
+                            {% if perms.core.mw_companies_access %}
+                                <li><a href="{% url "companies" %}" class="{% active 'companies' %}">Compañías</a></li>
+                            {% endif %}
+                            {% if perms.core.cashout_summaries_access %}
+                                <li><a href="{% url "cash_out_summaries" %}" class="{% active 'cash_out_summaries' %}">Informe
+                                    Cash Outs</a></li>
+                            {% endif %}
+                            <!--
+                            {% if perms.core.cashout_summaries_access %}
+                            <li><a href="{% url "cash_out_priorities" %}" class="{% active 'cash_out_priorities' %}">Ponderación de Cash Outs</a></li>
+                            {% endif %}
+                            -->
+                            {% if perms.core.cashin_process_access %}
+                                <li><a href="{% url "cashin_process_status" %}"
+                                       class="{% active 'cashin_process_status' %}">CashIn Status</a></li>
+                            {% endif %}
+                            {% if perms.core.cashin_binnacle_summaries_access %}
+                                <li><a href="{% url "cashin_binnacle_summary" %}"
+                                       class="{% active 'cashin_binnacle_summary' %}">CashIn Bitacora</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
+            <!-- Riesgo fin -->
+
+            <!-- Bondi -->
+                {% if perms.core.bondi_access %}
+                    <li>
+                        <a href="#">
+                            <span><span class="fa fa-bus"></span> Bondi<span class="fa arrow"></span></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li><a href="{% url "topics" %}" class="{% active 'topics' %}">Topics</a></li>
+                            <li><a href="{% url "subscriber_messages" %}" class="{% active 'subscriber_messages' %}">Messages</a>
+                            </li>
+                        </ul>
+                    </li>
+                {% endif %}
+            <!-- Bondi fin -->
+            </ul>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Left Sidebar -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page Content -->
+    <!-- ============================================================== -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row bg-title">
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                    <h4 class="page-title">{% block pagetitle %}{% endblock %}</h4></div>
+                <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                    <ol class="breadcrumb">
+                        {% block breadcrumbs %}{% endblock %}
+                    </ol>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <div class="row">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        <!-- /.container-fluid -->
+        <footer class="footer text-center"> 2018 &copy; Wenance</footer>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page Content -->
+    <!-- ============================================================== -->
+</div>
+<!-- /#wrapper -->
+<script src="{% static "js/jquery.min.js" %}"></script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/bootstrap-datepicker.min.js" %}"></script>
+<script src="{% static "js/sidebar-nav.min.js" %}"></script>
+<script src="{% static "js/jquery.toast.js" %}"></script>
+<script src="{% static "js/jquery.slimscroll.js" %}"></script>
+<script src="{% static "js/waves.js" %}"></script>
+<script src="{% static "js/custom.js" %}"></script>
+<script src="{% static "js/datatables.min.js" %}"></script>
+<!--
+    <script src="{% static "js/raphael.min.js" %}"></script>
+    <script src="{% static "js/flowchart.min.js" %}"></script>
+-->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+        });
+
+        {% for message in messages %}
+            $.toast({
+                text: '{{ message }}',
+                position: 'top-right',
+                icon: '{{ message.tags }}',
+                hideAfter: false,
+            });
+        {% endfor %}
+        {% block onready %}{% endblock %}
+    });
+</script>
+</body>
+</html>

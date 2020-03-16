@@ -1,0 +1,33 @@
+<div class="panel-info">
+    <div class="panel-heading">
+        <h2 class="panel-title">Estrategia: <b>{{ data.description }}</b></h2>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="module col-md-6 col-xs-12"
+                 style="color:{% if data.status == 'SUCCESS' %} green; {% else %} {% if data.status == 'ERROR' %} red; {% else %} black; {% endif %}{% endif %}">
+                <p><strong>Estado:</strong> {{ data.status }}
+                    ({{ data.status_description }})</p>
+                <p><strong>Usuario:</strong> {{ data.user }}</p>
+            </div>
+            <div class="module col-md-6 col-xs-12">
+                <p><strong>Fecha Inicio:</strong> {{ data.start_date }}</p>
+                <p><strong>Fecha Fin:</strong> {{ data.finished_date }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div class="module col-md-12">
+                    <h2>Parámetros de Entrada</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="module col-md-12">
+                    {% for block in blocks %}
+                        {% include block.template with data=block %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

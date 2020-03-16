@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n static %}
+{% block title %}Cashin Status{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Cashin Status</li>
+{% endblock %}
+
+{% block pagetitle %}Cashin Status{%  endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="white-box">
+        <div class="col-md-3 col-sm-4 col-xs-6 pull-right">
+        </div>
+        <h3 class="box-title">lista de cashin status
+            <a href="{% url "cashin_process_status" %}" class="btn btn-warning">
+                    <i class="fa fa-refresh"></i>
+            </a>                
+        </h3>
+        <p class="text-muted">Lista de cashin status</p>
+        <div class="table-responsive overflow-visible">
+            <table class="table table-striped" id="data-table">
+                <thead>
+                    <tr>
+                        <th>MD5</th>
+                        <th>Compañia</th>
+                        <th>Banco</th>
+                        <th>Archivo</th>
+                        <th>Mensaje</th>
+                        <th>Creado</th>
+                        <th>Actualizado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pst in process_status %}
+                    <tr>
+                        <td>{{ pst.md5 }}</td>
+                        <td>{{ pst.company_code }}</td>
+                        <td>{{ pst.bank }}</td>
+                        <td title="{{ pst.file_name }}">{{ pst.file_name|slice:"0:45" }}</td>
+                        <td>{{ pst.log }}</td>
+                        <td>{{ pst.created_at }}</td>
+                        <td>{{ pst.last_updated }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block onready %}
+$('#data-table').DataTable({
+    "order": [[ 6, "desc" ]]
+});
+{% endblock %}

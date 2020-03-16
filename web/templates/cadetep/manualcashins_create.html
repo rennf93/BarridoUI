@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n static crispy_forms_tags %}
+{% block title %}Manual Cashin{% endblock %}
+
+{% block breadcrumbs %}
+    <li><a href="{% url "index" %}">{% trans "Inicio" %}</a></li>
+    <li class="active">Manual Cashin</li>
+{% endblock %}
+
+{% block pagetitle %}Nuevo Cashin Manual{% endblock %}
+
+{% block content %}
+{% include "components/stepper_header.html" with data=stepper_header %}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form method="post" class="post-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <input type="submit" value="Enviar" />
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static "js/cadetep/manualcashin_create.js" %}"></script>
+{% endblock %}
